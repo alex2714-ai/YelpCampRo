@@ -1,0 +1,67 @@
+<% layout('layouts/boilerplate.ejs') %>
+<div class="row">
+  <h1 class="text-center">New campground</h1>
+  <div class="col-sm-12 col-md-6 offset-md-3">
+    <form action="/campgrounds" method="post" class="validated-form" novalidate enctype="multipart/form-data">
+      <div class="mb-3">
+        <label class="form-label" for="title">Title</label>
+        <input class="form-control" type="text" id="title" name="campground[title]" required>
+        <div class="valid-feedback">
+          Looks good!
+        </div>
+      </div>
+      <div class="mb-3">
+        <div class="row g-3">
+          <div class="col">
+            <label class="form-label" for="judet">County</label>
+            <select class="form-select" id="judet" name="campground[location][judet]" required>
+              <option selected disabled value="">Choose...</option>
+            </select>
+            <div id="judet" class="invalid-feedback">
+              Please select a valid county.
+            </div>
+          </div>
+          <div class="col">
+            <label class="form-label" for="oras">City</label>
+            <select class="form-select " id="oras" name="campground[location][localitate]" disabled required></select>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Choose Image(s)</label>
+          <div class="form-file custom-file">
+            <input class="form-control custom-file-input" type="file" id="image" name="image" multiple onchange="previewMultiple(event) " required>
+            <label for="image" class="form-label custom-file-label"></label>
+          </div>
+          <div id="formFile">
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="price">Price</label>
+          <div class="input-group">
+            <span class="input-group-text" id="price">$</span>
+            <input type="text" class="form-control" placeholder="0.0" aria-label="price" aria-describedby="price" name="campground[price]" required>
+            <div class="invalid-feedback">
+              Please add a price/night.
+            </div>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label" for="description">Description</label>
+          <textarea rows="4" cols="5" class="form-control" id="description" name="campground[description]" minlength="5" required></textarea>
+          <div class="invalid-feedback">
+            Please describe the campground, at least 5 characters.
+          </div>
+        </div>
+        <div class="mb-3">
+          <button type="submit" class="btn btn-success" id="btn">Add a campground</button>
+        </div>
+    </form>
+    <!-- <a href="/campgrounds">All Campgrounds</a> -->
+  </div>
+</div>
+
+<script src="/javascripts/populateSelectors.js"></script>
+<script>
+  window.onload = judet();
+</script>

@@ -1,0 +1,80 @@
+<% layout('layouts/boilerplate.ejs') %>
+<div id="cluster-map"></div>
+
+<div class="container" id="campgrounds-container">
+  <div class="row row-cols-lg-auto g-3 align-items-center">
+    <h1 class="mb-3">All Campgrounds</h1>
+    <div class="col-md-3  offset-md-6">
+      <form id="form" name="myform" method="post" action="/campgrounds/filter">
+        <label class="fs-5" for="filter"><strong> Sort by</strong></label>
+        <select name="filter" id="filter">
+          <option hidden value="1">Select an option</option>
+          <option value="_id">Sort by most recent</option>
+          <option value="rating">Sort by highest rating</option>
+          <option value="price">Sort by price</option>
+        </select>
+      </form>
+    </div>
+  </div>
+
+  <% let iCamp %>
+  <% if (Symbol.iterator in Object(campgrounds)) { %>
+  <%  iCamp=campgrounds %>
+  <% } else { %>
+  <%iCamp=campgrounds.docs%>
+  <% } %>
+
+  <% for( let campground of iCamp ){ %>
+  <div class="card mb-3">
+    <div class="row ">
+      <div class=" col-md-4 col-sm-6 " style=" display:flex; flex-wrap: wrap;">
+        <%if(campground.images.length) {%>
+        <img class="img-fluid" style="width: 500px; height: 300px;" alt="" src="<%=campground.images[0].url%>">
+        <% }else {%>
+        <img class="img-fluid" alt="" src="https://res.cloudinary.com/dtxw73hy3/image/upload/v1669931306/CampImages/dontDelete_DUDE_dakvkm.jpg">
+        <% } %>
+      </div>
+      <div class="col-md-8">
+        <div class="card-body">
+          <h5 class="card-title"><%=campground.title%></h5>
+          <div class="mb-1">
+            <% if (campground.rating===0) { %>
+            <em> No reviews yet</em>
+
+            <% } else { %>
+            <%- '<span class="fa-solid fa-star mb-3"></span>'.repeat(Math.ceil(campground.rating)) %><%- '<span class="fa-regular fa-star"></span>'.repeat(5 - Math.ceil(campground.rating)) %>
+            <% } %>
+          </div>
+          <p class="card-text"><%=campground.description.substring(0,250)%>...</p>
+          <p class="list-group-item">Price: <%=campground.price%> Lei/night</p>
+          <p class="card-text">
+            <small class="text-muted">Județul: <%=campground.location['judet']  %>, Localitate: <%=campground.location['localitate']%></small>
+          </p>
+          <a href="/campgrounds/<%=campground.id%>" class="btn btn-primary">Show Details</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% } %>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<div class="text-center mb-5" id="bt">
+  <% if (filt==undefined) { %>
+  <a href="/campgrounds?page=<%= campgrounds.nextPage %>" id="paginate" class="btn btn-primary">View More</a>
+  <% } else { %>
+  <a href="/campgrounds?filter=<%= filt %>&page=<%= campgrounds.nextPage %>" id="paginate" class="btn btn-primary">View More</a>
+  <% } %>
+</div>
+
+
+<script>
+  const mapToken = '<%-process.env.MAPBOX_TOKEN%>';
+  const campgrounds = {
+    features: <%- JSON.stringify(camp) %>
+  };
+</script>
+
+<script src="/javascripts/clusterMap.js"></script>
+<script src="/javascripts/paginations.js"></script>
+<script src="/javascripts/filterSubmit.js"></script>

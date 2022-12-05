@@ -1,0 +1,82 @@
+<% layout('layouts/boilerplate.ejs') %>
+
+<div class="row">
+  <div class="col-sm-12 col-md-6 offset-md-3 m-auto w-auto">
+    <h1>Update campground <%=campgroundsEdit.title %> </h1>
+    <form action="/campgrounds/<%=campgroundsEdit.id%>?_method=PUT" method="post" enctype="multipart/form-data" class="validated-form " novalidate>
+      <div class="mb-3">
+        <label class="form-label" for="title">Title</label>
+        <input class="form-control" type="text" value="<%=campgroundsEdit.title%>" id=" title" name="campground[title]" required>
+        <div class="valid-feedback">
+          Looks good!
+        </div>
+      </div>
+      <div class="mb-3">
+        <div class="row g-3">
+          <div class="col">
+            <label class="form-label" for="judet">County</label>
+            <select class="form-select" id="judet" name="campground[location][judet]" required>
+              <option value="<%= campgroundsEdit.location['judet'] %>" selected><%= campgroundsEdit.location['judet'] %> </option>
+            </select>
+          </div>
+          <div class="col">
+            <label class="form-label" for="oras">City</label>
+            <select class="form-select " id="oras" name="campground[location][localitate]" required>
+              <option value="<%= campgroundsEdit.location['localitate'] %>" selected><%= campgroundsEdit.location['localitate'] %> </option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Choose Image(s)</label>
+        <div class="form-file custom-file">
+          <input class="form-control custom-file-input" type="file" id="image" name="image" multiple onchange="previewMultiple(event) ">
+          <label for="image" class="form-label custom-file-label"></label>
+        </div>
+        <div id="formFile">
+        </div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label" for="price">Price</label>
+        <div class="input-group">
+          <span class="input-group-text" id="price">$</span>
+          <input type="text" value="<%=campgroundsEdit.price%>" class="form-control" placeholder="0.0" aria-label="price" aria-describedby="price" name="campground[price]" required>
+          <div class="invalid-feedback">
+            Please add a price/night.
+          </div>
+        </div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label" for="description">Description</label>
+        <textarea rows="4" cols="5" class="form-control" id="description" name="campground[description]" required><%=campgroundsEdit.description%></textarea>
+        <div class="invalid-feedback">
+          Please describe the campground, at least 5 characters.
+        </div>
+      </div>
+      <div class="mb-3">
+        <div class="row row-cols-1 row-cols-md-4 g-4 mb-3">
+          <%  for (let [i, image] of campgroundsEdit.images.entries()){ %>
+          <div class="col">
+            <div class="card">
+              <img class="card-img" src="<%= image.thumbnail %>" alt="">
+              <div class="card-img-overlay text-end pt-1 pe-2">
+                <label style="color: rgb(249, 5, 5)" for="image-<%= i %>"><i class="fa fa-trash" aria-hidden="true"></i></label>
+                <input class="form-check-input" type="checkbox" name="deleteImages[]" value="<%= image.filename %>" id="image-<%= i %>">
+              </div>
+            </div>
+          </div>
+          <% } %>
+        </div>
+      </div>
+      <div class="mb-3">
+        <button type="submit" class="btn btn-success" id="btn">Update campground</button>
+        <a href="/campgrounds/<%=campgroundsEdit.id%>" class="btn btn-danger">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="/javascripts/populateSelectors.js"></script>
+<script>
+  window.onload = judet();
+</script>
